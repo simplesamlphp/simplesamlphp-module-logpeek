@@ -9,7 +9,7 @@ function logpeek_hook_frontpage(&$links) {
 	assert('array_key_exists("links", $links)');
 
 	$links['config'][] = array(
-		'href' => SimpleSAML_Module::getModuleURL('logpeek/'),
+		'href' => \SimpleSAML\Module::getModuleURL('logpeek/'),
 		'text' => array('en' => 'SimpleSAMLphp logs access (Log peek)', 'no' => 'Vis simpleSAMLphp log'),
 	);
 
