@@ -3,6 +3,7 @@
  * Hook to add the logpeek module to the frontpage.
  *
  * @param array &$links  The links on the frontpage, split into sections.
+ * @return void
  */
 function logpeek_hook_frontpage(&$links)
 {
