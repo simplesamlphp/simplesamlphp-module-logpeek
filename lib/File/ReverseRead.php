@@ -192,7 +192,7 @@ class ReverseRead
 
         while ($this->blockStart) {
             $buff = $this->readChunk();
-            if(!$buff) {
+            if ($buff === false) {
                 break;
             }
 
@@ -234,7 +234,7 @@ class ReverseRead
 
 
     /**
-     * @return string
+     * @return string|false
      */
     public function getFirstLine()
     {
@@ -243,7 +243,7 @@ class ReverseRead
 
 
     /**
-     * @return string
+     * @return string|false
      */
     public function getLastLine()
     {

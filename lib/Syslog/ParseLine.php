@@ -17,8 +17,8 @@ class ParseLine
 
     /**
      * @param string $logLine
-     * @param int|null false
-     * @return string
+     * @param int|null $year
+     * @return int|false
      */
     public static function getUnixTime($logLine, $year = null)
     {
