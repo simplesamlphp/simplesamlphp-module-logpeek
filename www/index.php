@@ -54,8 +54,8 @@ $fileSize = $myLog->getFileSize();
 $t = new \SimpleSAML\XHTML\Template($config, 'logpeek:logpeek.php');
 $t->data['results'] = $results;
 $t->data['trackid'] = $session->getTrackID();
-$t->data['timestart'] = date(DATE_RFC822, $firstTimeEpoch);
-$t->data['endtime'] = date(DATE_RFC822, $lastTimeEpoch);
+$t->data['timestart'] = date(DATE_RFC822, $firstTimeEpoch ?: null);
+$t->data['endtime'] = date(DATE_RFC822, $lastTimeEpoch ?: null);
 $t->data['filesize'] = $fileSize;
 
 $t->show();
