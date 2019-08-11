@@ -200,7 +200,7 @@ class ReverseRead
             $lines -= substr_count($buff, "\n");
 
             if ($lines <= 0) {
-                $tmp_buff1 = $this->cutHead($buff, "\n", abs($lines) + 1);
+                $tmp_buff = $this->cutHead($buff, "\n", abs($lines) + 1);
                 if ($tmp_buff === false) {
                     break;
                 }
