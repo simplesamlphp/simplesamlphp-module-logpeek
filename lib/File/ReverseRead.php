@@ -65,20 +65,13 @@ class ReverseRead
         $this->fileSize = $this->blockStart = $fileInfo['size'];
         $this->fileMtime = $fileInfo['mtime'];
 
-        if ($this->fileSize > 0) {
-            $this->fileHandle = fopen($fileUrl, 'rb');
-            return true;
-        } else {
-            return false;
-        }
+        $this->fileHandle = fopen($fileUrl, 'rb');
     }
 
 
     public function __destruct()
     {
-        if (is_resource($this->fileHandle)) {
-            fclose($this->fileHandle);
-        }
+        fclose($this->fileHandle);
     }
 
 
@@ -88,7 +81,7 @@ class ReverseRead
      * of data from the file. It starts from the end of the file
      * and work towards the beginning of the file.
      * 
-     * @return string buffer with datablock.
+     * @return string|false buffer with datablock.
      * Will return bool FALSE when there is no more data to get.
      */
     private function readChunk()
@@ -115,7 +108,7 @@ class ReverseRead
     /**
      * Get one line of data from the file, starting from the end of the file.
      * 
-     * @return string One line of data from the file.
+     * @return string|false One line of data from the file.
      * Bool FALSE when there is no more data to get.
      */
     public function getPreviousLine()
@@ -123,31 +116,31 @@ class ReverseRead
         if (count($this->content) === 0 || $this->readPointer < 1) {
             do {
                 $buff = $this->readChunk();
-                if ($buff !== false) {
-                     $eolPos = strpos($buff, "\n");
-                } else {
+                if ($buff === false) {
                     // Empty buffer, no more to read.
                     if (strlen($this->remainder) > 0) {
                         $buff = $this->remainder;
                         $this->remainder = '';
                         // Exit from while-loop
                         break;
-                    } else {
-                        // Remainder also empty.
-                        return false;
                     }
+
+                    // Remainder also empty.
+                    return false;
                 }
+                $eolPos = strpos($buff, "\n");
 
                 if ($eolPos === false) {
                     // No eol found. Make buffer head of remainder and empty buffer.
                     $this->remainder = $buff . $this->remainder;
                     $buff = '';
-                } elseif($eolPos !== 0) {
+                } elseif ($eolPos !== 0) {
                     // eol found.
                     $buff .= $this->remainder;
                     $this->remainder = substr($buff, 0, $eolPos);
                     $buff = substr($buff, $eolPos+1);
-                } elseif($eolPos === 0) {
+                } else {
+                    // eol must be 0.
                     $buff .= $this->remainder;
                     $buff = substr($buff, 1);
                     $this->remainder = '';
@@ -166,20 +159,31 @@ class ReverseRead
     }
 
 
+    /**
+     * @param string &$haystack
+     * @param string $needle
+     * @param int $exit
+     * @return string|false
+     */
     private function cutHead(&$haystack, $needle, $exit)
     {
+        /** @psalm-var int|false $pos */
         $pos = 0;
         $cnt = 0;
         // Holder på inntill antall ønskede linjer eller vi ikke finner flere linjer
         while ($cnt < $exit && ($pos = strpos($haystack, $needle, $pos)) !== false) {
             $pos++;
             $cnt++;
-        }   
+        }
         return ($pos === false) ? false : substr($haystack, $pos, strlen($haystack));
     }
 
 
-    // FIXME: This function has some error, do not use before auditing and testing
+    /**
+     * FIXME: This function has some error, do not use before auditing and testing
+     * @param int $lines
+     * @return array
+     */
     public function getTail($lines = 10)
     {
         $this->blockStart = $this->fileSize;
@@ -187,17 +191,23 @@ class ReverseRead
         $lastLines = [];
 
         while ($this->blockStart) {
-            $buff = $this->readChunk();
-            if(!$buff) {
+            $tmp_buff = $this->readChunk();
+            if ($tmp_buff === false) {
                 break;
             }
+            $buff = $tmp_buff;
 
             $lines -= substr_count($buff, "\n");
 
             if ($lines <= 0) {
-                $buff1[] = $this->cutHead($buff, "\n", abs($lines)+1);
+                $tmp_buff = $this->cutHead($buff, "\n", abs($lines) + 1);
+                if ($tmp_buff === false) {
+                    break;
+                }
+                $buff1[] = $tmp_buff;
                 break;
             }
+
             $buff1[] = $buff;
         }
 
@@ -209,6 +219,10 @@ class ReverseRead
     }
 
 
+    /**
+     * @param int $pos
+     * @return string|false
+     */
     private function getLineAtPost($pos)
     {
         if ($pos < 0 || $pos > $this->fileSize) {
@@ -217,7 +231,7 @@ class ReverseRead
 
         $seeker = $pos;
         fseek($this->fileHandle, $seeker, SEEK_SET);
-        while($seeker > 0 && fgetc($this->fileHandle) !== "\n"){
+        while ($seeker > 0 && fgetc($this->fileHandle) !== "\n"){
             fseek($this->fileHandle, --$seeker, SEEK_SET);
         }
 
@@ -225,24 +239,36 @@ class ReverseRead
     }
 
 
+    /**
+     * @return string|false
+     */
     public function getFirstLine()
     {
         return $this->getLineAtPost(0);
     }
 
 
+    /**
+     * @return string|false
+     */
     public function getLastLine()
     {
         return $this->getLineAtPost($this->fileSize - 2);
     }
 
 
+    /**
+     * @return int
+     */
     public function getFileSize()
     {
         return $this->fileSize;
     }
 
 
+    /**
+     * @return int
+     */
     public function getFileMtime()
     {
         return $this->fileMtime;

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @param \SimpleSAML\Module\logpeek\File\ReverseRead $objFile
+ * @param string $tag
+ * @param int $cut
+ * @return array
+ */
 function logFilter($objFile, $tag, $cut)
 {
     if (!preg_match('/^[a-f0-9]{10}$/D', $tag)) {
@@ -32,24 +38,24 @@ $blockSize = $logpeekconfig->getValue('blocksz', 8192);
 $myLog = new \SimpleSAML\Module\logpeek\File\ReverseRead($logfile, $blockSize);
 
 
-$results = mi;;;
+$results = null;
 if (isset($_REQUEST['tag'])) {
     $results = logFilter($myLog, $_REQUEST['tag'], $logpeekconfig->getValue('lines', 500));
 }
 
 
-$fileModYear = date("Y", $myLog->getFileMtime());
+$fileModYear = intval(date("Y", $myLog->getFileMtime()));
 $firstLine = $myLog->getFirstLine();
-$firstTimeEpoch = \SimpleSAML\Module\logpeek\Syslog\ParseLine::getUnixTime($firstLine, $fileModYear);
+$firstTimeEpoch = \SimpleSAML\Module\logpeek\Syslog\ParseLine::getUnixTime($firstLine ?: '', $fileModYear);
 $lastLine = $myLog->getLastLine();
-$lastTimeEpoch = \SimpleSAML\Module\logpeek\Syslog\ParseLine::getUnixTime($lastLine, $fileModYear);
+$lastTimeEpoch = \SimpleSAML\Module\logpeek\Syslog\ParseLine::getUnixTime($lastLine ?: '', $fileModYear);
 $fileSize = $myLog->getFileSize();
 
 $t = new \SimpleSAML\XHTML\Template($config, 'logpeek:logpeek.php');
 $t->data['results'] = $results;
 $t->data['trackid'] = $session->getTrackID();
-$t->data['timestart'] = date(DATE_RFC822, $firstTimeEpoch);
-$t->data['endtime'] = date(DATE_RFC822, $lastTimeEpoch);
+$t->data['timestart'] = date(DATE_RFC822, $firstTimeEpoch ?: time());
+$t->data['endtime'] = date(DATE_RFC822, $lastTimeEpoch ?: time());
 $t->data['filesize'] = $fileSize;
 
 $t->show();

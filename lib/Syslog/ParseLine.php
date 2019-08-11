@@ -4,11 +4,22 @@ namespace SimpleSAML\Module\logpeek\Syslog;
 
 class ParseLine
 {
+    /**
+     * @param int $time
+     * @param string $logLine
+     * @return bool
+     */
     public static function isOlderThan($time, $logLine)
     {
         return true;
     }
 
+
+    /**
+     * @param string $logLine
+     * @param int|null $year
+     * @return int|false
+     */
     public static function getUnixTime($logLine, $year = null)
     {
         // I can read month and day and time from the file.
