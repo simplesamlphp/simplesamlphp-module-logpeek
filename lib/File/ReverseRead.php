@@ -65,20 +65,13 @@ class ReverseRead
         $this->fileSize = $this->blockStart = $fileInfo['size'];
         $this->fileMtime = $fileInfo['mtime'];
 
-        if ($this->fileSize > 0) {
-            $this->fileHandle = fopen($fileUrl, 'rb');
-            return true;
-        } else {
-            return false;
-        }
+        $this->fileHandle = fopen($fileUrl, 'rb');
     }
 
 
     public function __destruct()
     {
-        if (is_resource($this->fileHandle)) {
-            fclose($this->fileHandle);
-        }
+        fclose($this->fileHandle);
     }
 
 
