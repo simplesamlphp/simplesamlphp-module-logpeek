@@ -134,12 +134,13 @@ class ReverseRead
                     // No eol found. Make buffer head of remainder and empty buffer.
                     $this->remainder = $buff . $this->remainder;
                     $buff = '';
-                } elseif($eolPos !== 0) {
+                } elseif ($eolPos !== 0) {
                     // eol found.
                     $buff .= $this->remainder;
                     $this->remainder = substr($buff, 0, $eolPos);
                     $buff = substr($buff, $eolPos+1);
-                } elseif($eolPos === 0) {
+                } else {
+                    // eol must be 0.
                     $buff .= $this->remainder;
                     $buff = substr($buff, 1);
                     $this->remainder = '';
@@ -159,20 +160,21 @@ class ReverseRead
 
 
     /**
-     * @param array &$haystack
+     * @param string &$haystack
      * @param string $needle
      * @param int $exit
      * @return string|false
      */
     private function cutHead(&$haystack, $needle, $exit)
     {
+        /** @psalm-var int|false $pos */
         $pos = 0;
         $cnt = 0;
         // Holder på inntill antall ønskede linjer eller vi ikke finner flere linjer
         while ($cnt < $exit && ($pos = strpos($haystack, $needle, $pos)) !== false) {
             $pos++;
             $cnt++;
-        }   
+        }
         return ($pos === false) ? false : substr($haystack, $pos, strlen($haystack));
     }
 
