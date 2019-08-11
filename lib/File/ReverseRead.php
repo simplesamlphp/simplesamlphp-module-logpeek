@@ -20,8 +20,8 @@ class ReverseRead
     /** @var int */
     private $blockStart;
 
-    /** @var resource|null */
-    private $fileHandle = null;
+    /** @var resource */
+    private $fileHandle;
 
     /**
      * fileSize may be changed after initial file size check
