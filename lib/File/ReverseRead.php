@@ -123,10 +123,10 @@ class ReverseRead
                         $this->remainder = '';
                         // Exit from while-loop
                         break;
-                    } else {
-                        // Remainder also empty.
-                        return false;
                     }
+
+                    // Remainder also empty.
+                    return false;
                 }
                 $eolPos = strpos($buff, "\n");
 
