@@ -195,6 +195,7 @@ class ReverseRead
             if ($tmp_buff === false) {
                 break;
             }
+            /** @var string $buff */
             $buff = $tmp_buff;
 
             $lines -= substr_count($buff, "\n");

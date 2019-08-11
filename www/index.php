@@ -44,7 +44,7 @@ if (isset($_REQUEST['tag'])) {
 }
 
 
-$fileModYear = date("Y", $myLog->getFileMtime());
+$fileModYear = intval(date("Y", $myLog->getFileMtime()));
 $firstLine = $myLog->getFirstLine();
 $firstTimeEpoch = \SimpleSAML\Module\logpeek\Syslog\ParseLine::getUnixTime($firstLine ?: '', $fileModYear);
 $lastLine = $myLog->getLastLine();
