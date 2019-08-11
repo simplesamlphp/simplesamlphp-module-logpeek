@@ -191,10 +191,11 @@ class ReverseRead
         $lastLines = [];
 
         while ($this->blockStart) {
-            $buff = $this->readChunk();
-            if ($buff === false) {
+            $tmp_buff = $this->readChunk();
+            if ($tmp_buff === false) {
                 break;
             }
+            $buff = $tmp_buff;
 
             $lines -= substr_count($buff, "\n");
 
