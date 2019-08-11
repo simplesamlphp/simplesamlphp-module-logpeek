@@ -191,21 +191,23 @@ class ReverseRead
         $lastLines = [];
 
         while ($this->blockStart) {
-            $buff = $this->readChunk();
-            if ($buff === false) {
+            $tmp_buff = $this->readChunk();
+            if ($tmp_buff === false) {
                 break;
             }
+            $buff = $tmp_buff;
 
             $lines -= substr_count($buff, "\n");
 
             if ($lines <= 0) {
-                $buff1[] = $this->cutHead($buff, "\n", abs($lines)+1);
+                $tmp_buff1 = $this->cutHead($buff, "\n", abs($lines) + 1);
+                if ($tmp_buff === false) {
+                    break;
+                }
+                $buff1[] = $tmp_buff;
                 break;
             }
 
-            if ($buff === false) {
-                break;
-            }
             $buff1[] = $buff;
         }
 
