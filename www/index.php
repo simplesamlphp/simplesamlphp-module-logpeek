@@ -6,7 +6,7 @@
  * @param int $cut
  * @return array
  */
-function logFilter($objFile, $tag, $cut)
+function logFilter(\SimpleSAML\Module\logpeek\File\ReverseRead $objFile, string $tag, int $cut): array
 {
     if (!preg_match('/^[a-f0-9]{10}$/D', $tag)) {
         throw new Exception('Invalid search tag');
@@ -20,7 +20,7 @@ function logFilter($objFile, $tag, $cut)
         }
         $line = $objFile->getPreviousLine();
     }
-    $results[] = 'Searched '.$i.' lines backward. '.count($results).' lines found.';
+    $results[] = 'Searched ' . $i . ' lines backward. ' . count($results) . ' lines found.';
     $results = array_reverse($results);
     return $results;
 }
@@ -38,7 +38,7 @@ $blockSize = $logpeekconfig->getValue('blocksz', 8192);
 $myLog = new \SimpleSAML\Module\logpeek\File\ReverseRead($logfile, $blockSize);
 
 
-$results = null;
+$results = [];
 if (isset($_REQUEST['tag'])) {
     $results = logFilter($myLog, $_REQUEST['tag'], $logpeekconfig->getValue('lines', 500));
 }
@@ -51,11 +51,11 @@ $lastLine = $myLog->getLastLine();
 $lastTimeEpoch = \SimpleSAML\Module\logpeek\Syslog\ParseLine::getUnixTime($lastLine ?: '', $fileModYear);
 $fileSize = $myLog->getFileSize();
 
-$t = new \SimpleSAML\XHTML\Template($config, 'logpeek:logpeek.php');
+$t = new \SimpleSAML\XHTML\Template($config, 'logpeek:logpeek.twig');
 $t->data['results'] = $results;
 $t->data['trackid'] = $session->getTrackID();
 $t->data['timestart'] = date(DATE_RFC822, $firstTimeEpoch ?: time());
 $t->data['endtime'] = date(DATE_RFC822, $lastTimeEpoch ?: time());
 $t->data['filesize'] = $fileSize;
 
-$t->show();
+$t->send();

@@ -9,7 +9,7 @@ class ParseLine
      * @param string $logLine
      * @return bool
      */
-    public static function isOlderThan($time, $logLine)
+    public static function isOlderThan(int $time, string $logLine): bool
     {
         return true;
     }
@@ -20,7 +20,7 @@ class ParseLine
      * @param int|null $year
      * @return int|false
      */
-    public static function getUnixTime($logLine, $year = null)
+    public static function getUnixTime(string $logLine, int $year = null)
     {
         // I can read month and day and time from the file.
         // but I will assum year is current year retured by time().
