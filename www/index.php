@@ -20,7 +20,7 @@ function logFilter($objFile, $tag, $cut)
         }
         $line = $objFile->getPreviousLine();
     }
-    $results[] = 'Searched '.$i.' lines backward. '.count($results).' lines found.';
+    $results[] = 'Searched ' . $i . ' lines backward. ' . count($results) . ' lines found.';
     $results = array_reverse($results);
     return $results;
 }

@@ -5,7 +5,7 @@ namespace SimpleSAML\Module\logpeek\File;
 /**
  * Functionatility for line by line reverse reading of a file. It is done by blockwise
  * fetching the file from the end and putting the lines into an array.
- * 
+ *
  * @author Thomas Graff<thomas.graff@uninett.no>
  *
  */
@@ -41,11 +41,11 @@ class ReverseRead
     /** @var int  Count read lines from the end */
     private $readPointer;
 
-	
+
     /**
      * File is checked and file handle to file is opend. But no data is read
      * from the file.
-     * 
+     *
      * @param string $fileUrl Path and filename to file to be read
      * @param int $blockSize File read block size in byte
      * @return bool Success
@@ -60,7 +60,7 @@ class ReverseRead
         $this->content = [];
         $this->remainder = '';
         $this->readPointer = 0;
-		
+
         $fileInfo = stat($fileUrl);
         $this->fileSize = $this->blockStart = $fileInfo['size'];
         $this->fileMtime = $fileInfo['mtime'];
@@ -80,7 +80,7 @@ class ReverseRead
      * Each time this function is called, will it fetch a chunk
      * of data from the file. It starts from the end of the file
      * and work towards the beginning of the file.
-     * 
+     *
      * @return string|false buffer with datablock.
      * Will return bool FALSE when there is no more data to get.
      */
@@ -107,7 +107,7 @@ class ReverseRead
 
     /**
      * Get one line of data from the file, starting from the end of the file.
-     * 
+     *
      * @return string|false One line of data from the file.
      * Bool FALSE when there is no more data to get.
      */
@@ -138,14 +138,14 @@ class ReverseRead
                     // eol found.
                     $buff .= $this->remainder;
                     $this->remainder = substr($buff, 0, $eolPos);
-                    $buff = substr($buff, $eolPos+1);
+                    $buff = substr($buff, $eolPos + 1);
                 } else {
                     // eol must be 0.
                     $buff .= $this->remainder;
                     $buff = substr($buff, 1);
                     $this->remainder = '';
                 }
-            } while(($buff !== false) && ($eolPos === false));
+            } while (($buff !== false) && ($eolPos === false));
 
             $this->content = explode("\n", $buff);
             $this->readPointer = count($this->content);
@@ -231,7 +231,7 @@ class ReverseRead
 
         $seeker = $pos;
         fseek($this->fileHandle, $seeker, SEEK_SET);
-        while ($seeker > 0 && fgetc($this->fileHandle) !== "\n"){
+        while ($seeker > 0 && fgetc($this->fileHandle) !== "\n") {
             fseek($this->fileHandle, --$seeker, SEEK_SET);
         }
 
