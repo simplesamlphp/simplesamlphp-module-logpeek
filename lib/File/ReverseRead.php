@@ -6,7 +6,6 @@ namespace SimpleSAML\Module\logpeek\File;
  * Functionatility for line by line reverse reading of a file. It is done by blockwise
  * fetching the file from the end and putting the lines into an array.
  *
- * @author Thomas Graff<thomas.graff@uninett.no>
  *
  */
 class ReverseRead
