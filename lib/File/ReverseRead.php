@@ -68,7 +68,6 @@ class ReverseRead
 
 
     /**
-     * @return void
      */
     public function __destruct()
     {
