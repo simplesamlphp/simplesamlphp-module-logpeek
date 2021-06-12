@@ -14,10 +14,10 @@ class ReverseRead
      * 8192 is max number of octets limited by fread.
      * @var int
      */
-    private $blockSize;
+    private int $blockSize;
 
     /** @var int */
-    private $blockStart;
+    private int $blockStart;
 
     /** @var resource */
     private $fileHandle;
@@ -26,19 +26,19 @@ class ReverseRead
      * fileSize may be changed after initial file size check
      * @var int
      */
-    private $fileSize;
+    private int $fileSize;
 
     /** @var int */
-    private $fileMtime;
+    private int $fileMtime;
 
     /** @var array Array containing file lines */
-    private $content;
+    private array $content;
 
     /** @var string Leftover before first complete line */
-    private $remainder;
+    private string $remainder;
 
     /** @var int  Count read lines from the end */
-    private $readPointer;
+    private int $readPointer;
 
 
     /**
