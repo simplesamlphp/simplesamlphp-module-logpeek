@@ -82,7 +82,7 @@ class ReverseRead
         $this->fileSize = $this->blockStart = $fileInfo['size'];
         $this->fileMtime = $fileInfo['mtime'];
 
-        if ($this->fileSize > 0){
+        if ($this->fileSize > 0) {
             $this->fileHandle = fopen($fileUrl, 'rb');
             if (!$this->fileHandle) {
                 throw new Exception("Cannot open file '$fileUrl'");
