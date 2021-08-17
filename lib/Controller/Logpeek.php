@@ -39,6 +39,9 @@ class Logpeek
     /** @var \SimpleSAML\Session */
     protected Session $session;
 
+    /** @var \SimpleSAML\Utils\Auth */
+    protected $authUtils;
+
 
     /**
      * Controller constructor.
@@ -61,17 +64,28 @@ class Logpeek
 
 
     /**
+     * Inject the \SimpleSAML\Utils\Auth dependency.
+     *
+     * @param \SimpleSAML\Utils\Auth $authUtils
+     */
+    public function setAuthUtils(Utils\Auth $authUtils): void
+    {
+        $this->authUtils = $authUtils;
+    }
+
+
+    /**
      * Main index controller.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request The current request.
      *
      * @return \SimpleSAML\XHTML\Template
      */
-    public function attributes(Request $request): Template
+    public function main(Request $request): Template
     {
-        Utils\Auth::requireAdmin();
+        $this->authUtils::requireAdmin();
 
-        $logfile = $this->moduleConfig->getValue('logfile', '/var/simplesamlphp.log');
+        $logfile = $this->moduleConfig->getValue('logfile', '/var/log/simplesamlphp.log');
         $blockSize = $this->moduleConfig->getValue('blocksz', 8192);
 
         $myLog = new File\ReverseRead($logfile, $blockSize);
