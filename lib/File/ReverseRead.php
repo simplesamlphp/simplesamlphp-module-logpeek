@@ -2,11 +2,27 @@
 
 namespace SimpleSAML\Module\logpeek\File;
 
+use Exception;
+
+use function array_merge;
+use function count;
+use function explode;
+use function fclose;
+use function fgetc;
+use function file_exists;
+use function fopen;
+use function fread;
+use function fseek;
+use function is_readable;
+use function strlen;
+use function strpos;
+use function substr;
+use function substr_count;
+use function rtrim;
+
 /**
  * Functionatility for line by line reverse reading of a file. It is done by blockwise
  * fetching the file from the end and putting the lines into an array.
- *
- *
  */
 class ReverseRead
 {
@@ -50,8 +66,11 @@ class ReverseRead
      */
     public function __construct(string $fileUrl, int $blockSize = 8192)
     {
+        if (!file_exists($fileUrl)) {
+            throw new Exception("File does not exist: '$fileUrl'");
+        }
         if (!is_readable($fileUrl)) {
-            throw new \Exception('Log file not readable.');
+            throw new Exception("Cannot read file '$fileUrl'");
         }
 
         $this->blockSize = $blockSize;
@@ -63,7 +82,14 @@ class ReverseRead
         $this->fileSize = $this->blockStart = $fileInfo['size'];
         $this->fileMtime = $fileInfo['mtime'];
 
-        $this->fileHandle = fopen($fileUrl, 'rb');
+        if ($this->fileSize > 0){
+            $this->fileHandle = fopen($fileUrl, 'rb');
+            if (!$this->fileHandle) {
+                throw new Exception("Cannot open file '$fileUrl'");
+            }
+        } else {
+            throw new Exception("File is zero length: '$fileUrl'");
+        }
     }
 
 

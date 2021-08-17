@@ -2,6 +2,12 @@
 
 namespace SimpleSAML\Module\logpeek\Syslog;
 
+use function getdate;
+use function intval;
+use function sprintf;
+use function sscanf;
+use function strtotime;
+
 class ParseLine
 {
     /**
@@ -23,14 +29,14 @@ class ParseLine
     public static function getUnixTime(string $logLine, int $year = null)
     {
         // I can read month and day and time from the file.
-        // but I will assum year is current year retured by time().
+        // but I will assume year is current year retured by time().
         // Unless month and day in the file is bigger than current month and day,
-        // I will then asume prevous year.
+        // I will then assume previous year.
         // A better approach would be to get the year from last modification time (mtime) of the
-        // file this record is taken from. But that require knowledge about the file.
-        if (!$year) {
+        // file this record is taken from. But that requires knowledge about the file.
+        if ($year === null) {
             $now = getdate();
-            $year = (int)$now['year'];
+            $year = intval($now['year']);
         }
         list($month, $day, $hour, $minute, $second) = sscanf($logLine, "%s %d %d:%d:%d ");
         $time = sprintf("%d %s %d %d:%d:%d", $day, $month, $year, $hour, $minute, $second);
