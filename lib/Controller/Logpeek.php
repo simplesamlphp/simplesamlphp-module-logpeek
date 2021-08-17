@@ -83,7 +83,7 @@ class Logpeek
      */
     public function main(Request $request): Template
     {
-        $this->authUtils::requireAdmin();
+        $this->authUtils->requireAdmin();
 
         $logfile = $this->moduleConfig->getValue('logfile', '/var/log/simplesamlphp.log');
         $blockSize = $this->moduleConfig->getValue('blocksz', 8192);
