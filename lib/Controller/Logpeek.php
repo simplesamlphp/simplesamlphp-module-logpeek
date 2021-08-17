@@ -125,7 +125,7 @@ class Logpeek
      */
     private function logFilter(File\ReverseRead $objFile, string $tag, int $cut): array
     {
-        if (!preg_match('/^[a-f0-9]{10}$/D', $tag)) {
+        if (!preg_match('/^(TR[a-f0-9{8}]|CL[a-f0-9]{8}|[a-f0-9{10}])$/D', $tag)) {
             throw new Exception('Invalid search tag');
         }
 
