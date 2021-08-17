@@ -1,0 +1,3 @@
+logpeek-main:
+    path:       /
+    defaults:   { _controller: 'SimpleSAML\Module\logpeek\Controller\Logpeek::main' }
