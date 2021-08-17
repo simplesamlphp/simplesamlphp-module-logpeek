@@ -96,4 +96,22 @@ class LogpeekTest extends TestCase
 
         $this->assertTrue($response->isSuccessful());
     }
+
+
+    /**
+     */
+    public function testMainWithTag(): void
+    {
+        $request = Request::create(
+            '/',
+            'GET',
+            ['tag' => $this->session->getTrackID()]
+        );
+
+        $c = new Controller\Logpeek($this->config, $this->session);
+        $c->setAuthUtils($this->authUtils);
+        $response = $c->main($request);
+
+        $this->assertTrue($response->isSuccessful());
+    }
 }
