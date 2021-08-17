@@ -57,6 +57,7 @@ class Logpeek
         Configuration $config,
         Session $session
     ) {
+        $this->authUtils = new Utils\Auth();
         $this->config = $config;
         $this->moduleConfig = Configuration::getConfig('module_logpeek.php');
         $this->session = $session;
