@@ -22,5 +22,4 @@ where `dev-master` instructs Composer to install the `master` branch from the Gi
 [releases](https://github.com/simplesamlphp/simplesamlphp-module-logpeek/releases) available if you
 want to use a stable version of the module.
 
-The module is enabled by default. If you want to disable the module once installed, you just need to create a file named
-`disable` in the `modules/logpeek/` directory inside your SimpleSAMLphp installation.
+The module is disabled by default. If you want to enable the module once installed, you just need to add it to the `module.enable` array in `config.php`.
