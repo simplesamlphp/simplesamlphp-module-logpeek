@@ -137,9 +137,9 @@ class Logpeek {
     {
         $configUtils = new Utils\Config();
         $configDir = $configUtils->getConfigDir();
-        $yamlConfig = Yaml::parse(file_get_contents($configDir . '/' . $configFile)) ?? [];
+        $yamlConfig = Yaml::parse(file_get_contents($configDir . '/' . $configFile));
 
-        return static::fromArray($yamlConfig);
+        return static::fromArray($yamlConfig ?? []);
     }
 
 
