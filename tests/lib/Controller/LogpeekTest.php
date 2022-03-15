@@ -115,6 +115,7 @@ class LogpeekTest extends TestCase
 
         $c = new Controller\Logpeek($this->config, $this->session, $this->moduleConfig);
         $c->setAuthUtils($this->authUtils);
+        $c->setModuleConfig($this->moduleConfig);
         $response = $c->main($request);
 
         $this->assertTrue($response->isSuccessful());
@@ -133,6 +134,7 @@ class LogpeekTest extends TestCase
 
         $c = new Controller\Logpeek($this->config, $this->session, $this->moduleConfig);
         $c->setAuthUtils($this->authUtils);
+        $c->setModuleConfig($this->moduleConfig);
         $response = $c->main($request);
 
         $this->assertTrue($response->isSuccessful());
@@ -151,6 +153,7 @@ class LogpeekTest extends TestCase
 
         $c = new Controller\Logpeek($this->config, $this->session, $this->moduleConfig);
         $c->setAuthUtils($this->authUtils);
+        $c->setModuleConfig($this->moduleConfig);
 
         $this->expectException(Exception::class);
         $c->main($request);

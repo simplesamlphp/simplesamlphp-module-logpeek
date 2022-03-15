@@ -133,7 +133,7 @@ class Logpeek {
      * @param string $file
      * @return self
      */
-    public static function fromYaml(string $configFile = 'module_logpeek.yml'): self
+    public static function fromYaml(string $configFile = self::DEFAULT_CONFIGFILE): self
     {
         $configUtils = new Utils\Config();
         $configDir = $configUtils->getConfigDir();
