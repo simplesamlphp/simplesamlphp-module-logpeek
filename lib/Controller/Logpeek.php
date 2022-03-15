@@ -51,16 +51,18 @@ class Logpeek
      *
      * @param \SimpleSAML\Configuration $config The configuration to use by the controllers.
      * @param \SimpleSAML\Session $session The session to use by the controllers.
+     * @param \SimpleSAML\Module\logpeek\Config\Logpeek $moduleConfig The configuration for this module
      *
      * @throws \Exception
      */
     public function __construct(
         Configuration $config,
-        Session $session
+        Session $session,
+        Config\Logpeek $moduleConfig
     ) {
         $this->authUtils = new Utils\Auth();
         $this->config = $config;
-        $this->moduleConfig = new Config\Logpeek('module_logpeek.yml');
+        $this->moduleConfig = $moduleConfig;
         $this->session = $session;
     }
 
