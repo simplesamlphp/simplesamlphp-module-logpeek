@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SimpleSAML\Module\logpeek\Config;
 
-use E_USER_NOTICE;
 use SimpleSAML\Assert\Assert;
 use SimpleSAML\Configuration;
 use SimpleSAML\Utils;
@@ -16,6 +15,9 @@ use Symfony\Component\Yaml\Exception\ParseException;
  */
 
 class Logpeek {
+    /** @var string */
+    public const DEFAULT_CONFIGFILE = 'module_logpeek.yml';
+
     /** @var int */
     public const MAX_BLOCKSIZE = 8192;
 
@@ -29,43 +31,36 @@ class Logpeek {
     private string $logFile;
 
     /** @var int */
-    private int $lines = self::DEFAULT_LINES;
+    private int $lines;
 
     /** @var int */
-    private int $blockSize = self::DEFAULT_BLOCKSIZE;
+    private int $blockSize;
 
 
     /**
-     * @param string $defaultConfigFile
-     * @throws \Symfony\Component\Yaml\Exception\ParseException
+     * @param string|null $logFile
+     * @param int $blockSize
+     * @param int $lines
      */
-    public function __construct(string $defaultConfigFile = 'module_logpeek.yml')
+    public function __construct(?string $logFile, ?int $blockSize = null, ?int $lines = null)
     {
-        $configUtils = new Utils\Config();
-        $configDir = $configUtils->getConfigDir();
-        $yamlConfig = Yaml::parse(file_get_contents($configDir . '/' . $defaultConfigFile)) ?? [];
-        if (isset($yamlConfig['logFile'])) {
-            $this->setLogfile($yamlConfig['logFile']);
-        } else {
+        if ($logFile === null) {
             $config = Configuration::getInstance();
             $loggingDir = $config->getPathValue('loggingdir', 'log/');
-            $this->setLogfile($loggingDir . $config->getString('logging.logfile', 'simplesamlphp.log'));
+            $logFile = $loggingDir . $config->getString('logging.logfile', 'simplesamlphp.log');
         }
 
-        if (isset($yamlConfig['lines'])) {
-            $this->setLines($yamlConfig['lines']);
-        }
-
-        if (isset($yamlConfig['blockSize'])) {
-            $this->setBlockSize($yamlConfig['blockSize']);
-        }
+        $this->setLogFile($logFile);
+        $this->setBlockSize($blockSize ?? self::DEFAULT_BLOCKSIZE);
+        $this->setLines($lines ?? self::DEFAULT_LINES);
     }
 
 
     /**
      * @return string
      */
-    public function getLogFile(): string {
+    public function getLogFile(): string
+    {
         return $this->logFile;
     }
 
@@ -74,7 +69,8 @@ class Logpeek {
      * @param string $logFile
      * @return void
      */
-    protected function setLogFile(string $logFile): void {
+    protected function setLogFile(string $logFile): void
+    {
         $this->logFile = $logFile;
     }
 
@@ -82,7 +78,8 @@ class Logpeek {
     /**
      * @return int
      */
-    public function getLines(): int {
+    public function getLines(): int
+    {
         return $this->lines;
     }
 
@@ -91,7 +88,8 @@ class Logpeek {
      * @param int $lines
      * @return void
      */
-    protected function setLines(int $lines): void {
+    protected function setLines(int $lines): void
+    {
         Assert::positiveInteger($lines);
         $this->lines = $lines;
     }
@@ -100,7 +98,8 @@ class Logpeek {
     /**
      * @return int
      */
-    public function getBlockSize(): int {
+    public function getBlockSize(): int
+    {
         return $this->blockSize;
     }
 
@@ -109,8 +108,47 @@ class Logpeek {
      * @param int $blockSize
      * @return void
      */
-    protected function setBlockSize(int $blockSize): void {
+    protected function setBlockSize(int $blockSize): void
+    {
         Assert::range($blockSize, 0, self::MAX_BLOCKSIZE);
         $this->blockSize = $blockSize;
+    }
+
+
+    /**
+     * @param string $file
+     * @return self
+     */
+    public static function fromPhp(string $configFile = 'module_logpeek.php'): self
+    {
+        $configUtils = new Utils\Config();
+        $configDir = $configUtils->getConfigDir();
+        include($configDir . '/' . $configFile);
+
+        return static::fromArray($config ?? []);
+    }
+
+
+    /**
+     * @param string $file
+     * @return self
+     */
+    public static function fromYaml(string $configFile = 'module_logpeek.yml'): self
+    {
+        $configUtils = new Utils\Config();
+        $configDir = $configUtils->getConfigDir();
+        $yamlConfig = Yaml::parse(file_get_contents($configDir . '/' . $configFile)) ?? [];
+
+        return static::fromArray($yamlConfig);
+    }
+
+
+    /**
+     * @param array $config
+     * @return self
+     */
+    public static function fromArray(array $config): self
+    {
+        return new self($config['logFile'], $config['blockSize'], $config['lines']);
     }
 };
