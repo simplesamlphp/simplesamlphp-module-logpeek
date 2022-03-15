@@ -7,6 +7,7 @@ namespace SimpleSAML\Module\logpeek\Controller;
 use Exception;
 use SimpleSAML\Assert\Assert;
 use SimpleSAML\Configuration;
+use SimpleSAML\Module\logpeek\Config;
 use SimpleSAML\Module\logpeek\File;
 use SimpleSAML\Module\logpeek\Syslog;
 use SimpleSAML\Session;
@@ -33,8 +34,8 @@ class Logpeek
     /** @var \SimpleSAML\Configuration */
     protected Configuration $config;
 
-    /** @var \SimpleSAML\Configuration */
-    protected Configuration $moduleConfig;
+    /** @var \SimpleSAML\Module\logpeek\Config\Logpeek */
+    protected Config\Logpeek $moduleConfig;
 
     /** @var \SimpleSAML\Session */
     protected Session $session;
@@ -59,7 +60,7 @@ class Logpeek
     ) {
         $this->authUtils = new Utils\Auth();
         $this->config = $config;
-        $this->moduleConfig = Configuration::getConfig('module_logpeek.php');
+        $this->moduleConfig = Config\Logpeek::fromYaml();
         $this->session = $session;
     }
 
@@ -76,6 +77,17 @@ class Logpeek
 
 
     /**
+     * Inject the \SimpleSAML\Module\logpeek\Config\Logpeek dependency.
+     *
+     * @param \SimpleSAML\Module\logpeek\Config\Logpeek $moduleConfig
+     */
+    public function setModuleConfig(Config\Logpeek $moduleConfig): void
+    {
+        $this->moduleConfig = $moduleConfig;
+    }
+
+
+    /**
      * Main index controller.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request The current request.
@@ -86,10 +98,9 @@ class Logpeek
     {
         $this->authUtils->requireAdmin();
 
-        $logfile = $this->moduleConfig->getValue('logfile', '/var/log/simplesamlphp.log');
-        $blockSize = $this->moduleConfig->getValue('blocksz', 8192);
-
-        $myLog = new File\ReverseRead($logfile, $blockSize);
+        $logFile = $this->moduleConfig->getLogFile();
+        $blockSize = $this->moduleConfig->getBlockSize();
+        $myLog = new File\ReverseRead($logFile, $blockSize);
 
         $results = [];
         if ($request->query->has('tag') === true) {
@@ -97,7 +108,7 @@ class Logpeek
             $tag = $request->query->get('tag');
             Assert::notNull($tag);
 
-            $results = $this->logFilter($myLog, $tag, $this->moduleConfig->getValue('lines', 500));
+            $results = $this->logFilter($myLog, $tag, $this->moduleConfig->getLines());
         }
 
         $fileModYear = intval(date("Y", $myLog->getFileMtime()));

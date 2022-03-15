@@ -8,6 +8,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use SimpleSAML\Configuration;
 use SimpleSAML\Logger;
+use SimpleSAML\Module\logpeek\Config;
 use SimpleSAML\Module\logpeek\Controller;
 use SimpleSAML\Session;
 use SimpleSAML\Utils;
@@ -28,6 +29,9 @@ class LogpeekTest extends TestCase
 {
     /** @var \SimpleSAML\Configuration */
     protected Configuration $config;
+
+    /** @var \SimpleSAML\Module\logpeek\Config\Logpeek */
+    protected Config\Logpeek $moduleConfig;
 
     /** @var \SimpleSAML\Session */
     protected Session $session;
@@ -77,20 +81,14 @@ class LogpeekTest extends TestCase
             }
         };
 
-        Configuration::setPreLoadedConfig(
-            Configuration::loadFromArray(
-                [
-                    'logfile' => $this->tmpfile,
-                    'lines'   => 1500,
+        $this->moduleConfig = Config\Logpeek::fromArray(
+            [
+                'logFile' => $this->tmpfile,
+                'lines'   => 1500,
 
-                    // Read block size. 8192 is max, limited by fread.
-                    'blocksz' => 8192,
-                ],
-                '[ARRAY]',
-                'simplesaml'
-            ),
-            'module_logpeek.php',
-            'simplesaml'
+                // Read block size. 8192 is max, limited by fread.
+                'blockSize' => 8192,
+            ]
         );
     }
 
@@ -115,8 +113,9 @@ class LogpeekTest extends TestCase
             'GET'
         );
 
-        $c = new Controller\Logpeek($this->config, $this->session);
+        $c = new Controller\Logpeek($this->config, $this->session, $this->moduleConfig);
         $c->setAuthUtils($this->authUtils);
+        $c->setModuleConfig($this->moduleConfig);
         $response = $c->main($request);
 
         $this->assertTrue($response->isSuccessful());
@@ -133,8 +132,9 @@ class LogpeekTest extends TestCase
             ['tag' => $this->session->getTrackID()]
         );
 
-        $c = new Controller\Logpeek($this->config, $this->session);
+        $c = new Controller\Logpeek($this->config, $this->session, $this->moduleConfig);
         $c->setAuthUtils($this->authUtils);
+        $c->setModuleConfig($this->moduleConfig);
         $response = $c->main($request);
 
         $this->assertTrue($response->isSuccessful());
@@ -151,8 +151,9 @@ class LogpeekTest extends TestCase
             ['tag' => 'WRONG']
         );
 
-        $c = new Controller\Logpeek($this->config, $this->session);
+        $c = new Controller\Logpeek($this->config, $this->session, $this->moduleConfig);
         $c->setAuthUtils($this->authUtils);
+        $c->setModuleConfig($this->moduleConfig);
 
         $this->expectException(Exception::class);
         $c->main($request);
