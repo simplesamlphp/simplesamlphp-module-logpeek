@@ -86,8 +86,8 @@ class Logpeek
     {
         $this->authUtils->requireAdmin();
 
-        $logfile = $this->moduleConfig->getValue('logfile', '/var/log/simplesamlphp.log');
-        $blockSize = $this->moduleConfig->getValue('blocksz', 8192);
+        $logfile = $this->moduleConfig->getOptionalValue('logfile', '/var/log/simplesamlphp.log');
+        $blockSize = $this->moduleConfig->getOptionalValue('blocksz', 8192);
 
         $myLog = new File\ReverseRead($logfile, $blockSize);
 
@@ -97,7 +97,7 @@ class Logpeek
             $tag = $request->query->get('tag');
             Assert::notNull($tag);
 
-            $results = $this->logFilter($myLog, $tag, $this->moduleConfig->getValue('lines', 500));
+            $results = $this->logFilter($myLog, $tag, $this->moduleConfig->getOptionalValue('lines', 500));
         }
 
         $fileModYear = intval(date("Y", $myLog->getFileMtime()));
