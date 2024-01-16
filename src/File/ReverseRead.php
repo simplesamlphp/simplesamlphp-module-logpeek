@@ -16,11 +16,11 @@ use function fopen;
 use function fread;
 use function fseek;
 use function is_readable;
+use function rtrim;
 use function strlen;
 use function strpos;
 use function substr;
 use function substr_count;
-use function rtrim;
 
 /**
  * Functionatility for line by line reverse reading of a file. It is done by blockwise

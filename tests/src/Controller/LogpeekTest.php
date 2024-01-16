@@ -7,14 +7,12 @@ namespace SimpleSAML\Test\Module\logpeek\Controller;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use SimpleSAML\Configuration;
-use SimpleSAML\Logger;
 use SimpleSAML\Module\logpeek\Controller;
 use SimpleSAML\Session;
 use SimpleSAML\Utils;
 use Symfony\Component\HttpFoundation\Request;
 
 use function dirname;
-use function file_get_contents;
 use function sprintf;
 use function sys_get_temp_dir;
 use function unlink;

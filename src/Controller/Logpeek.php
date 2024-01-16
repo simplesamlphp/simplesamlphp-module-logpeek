@@ -15,9 +15,9 @@ use SimpleSAML\XHTML\Template;
 use Symfony\Component\HttpFoundation\Request;
 
 use function array_reverse;
-use function intval;
 use function count;
 use function date;
+use function intval;
 use function preg_match;
 use function strstr;
 
