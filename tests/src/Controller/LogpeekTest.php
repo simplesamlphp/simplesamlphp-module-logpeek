@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleSAML\Test\Module\logpeek\Controller;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use SimpleSAML\Configuration;
 use SimpleSAML\Module\logpeek\Controller;
@@ -19,9 +20,8 @@ use function unlink;
 
 /**
  * Set of tests for the controllers in the "logpeek" module.
- *
- * @covers \SimpleSAML\Module\logpeek\Controller\Logpeek
  */
+#[CoversClass(Controller\Logpeek::class)]
 class LogpeekTest extends TestCase
 {
     /** @var \SimpleSAML\Configuration */
