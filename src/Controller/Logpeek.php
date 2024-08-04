@@ -55,7 +55,7 @@ class Logpeek
      */
     public function __construct(
         Configuration $config,
-        Session $session
+        Session $session,
     ) {
         $this->authUtils = new Utils\Auth();
         $this->config = $config;

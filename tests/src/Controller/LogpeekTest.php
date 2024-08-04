@@ -55,7 +55,7 @@ class LogpeekTest extends TestCase
                 'logging.handler' => 'file',
             ],
             '[ARRAY]',
-            'simplesaml'
+            'simplesaml',
         );
 
         $tag = $this->session->getTrackID();
@@ -65,7 +65,7 @@ class LogpeekTest extends TestCase
                 sprintf("Aug 17 19:21:51 SimpleSAMLphp WARNING [%s] some" . PHP_EOL, $tag),
                 sprintf("Aug 17 19:21:52 SimpleSAMLphp WARNING [%s] test" . PHP_EOL, $tag),
                 sprintf("Aug 17 19:21:53 SimpleSAMLphp WARNING [%s] data" . PHP_EOL, $tag),
-            ]
+            ],
         );
 
         $this->authUtils = new class () extends Utils\Auth {
@@ -85,10 +85,10 @@ class LogpeekTest extends TestCase
                     'blocksz' => 8192,
                 ],
                 '[ARRAY]',
-                'simplesaml'
+                'simplesaml',
             ),
             'module_logpeek.php',
-            'simplesaml'
+            'simplesaml',
         );
     }
 
@@ -110,7 +110,7 @@ class LogpeekTest extends TestCase
     {
         $request = Request::create(
             '/',
-            'GET'
+            'GET',
         );
 
         $c = new Controller\Logpeek($this->config, $this->session);
@@ -128,7 +128,7 @@ class LogpeekTest extends TestCase
         $request = Request::create(
             '/',
             'GET',
-            ['tag' => $this->session->getTrackID()]
+            ['tag' => $this->session->getTrackID()],
         );
 
         $c = new Controller\Logpeek($this->config, $this->session);
@@ -146,7 +146,7 @@ class LogpeekTest extends TestCase
         $request = Request::create(
             '/',
             'GET',
-            ['tag' => 'WRONG']
+            ['tag' => 'WRONG'],
         );
 
         $c = new Controller\Logpeek($this->config, $this->session);
