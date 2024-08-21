@@ -1,6 +1,6 @@
 # SimpleSAMLphp logpeek module
 
-![Build Status](https://github.com/simplesamlphp/simplesamlphp-module-logpeek/workflows/CI/badge.svg?branch=master)
+![Build Status](https://github.com/simplesamlphp/simplesamlphp-module-logpeek/actions/workflows/php.yml/badge.svg)
 [![Coverage Status](https://codecov.io/gh/simplesamlphp/simplesamlphp-module-logpeek/branch/master/graph/badge.svg)](https://codecov.io/gh/simplesamlphp/simplesamlphp-module-logpeek)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/simplesamlphp/simplesamlphp-module-logpeek/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/simplesamlphp/simplesamlphp-module-logpeek/?branch=master)
 [![Type Coverage](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-logpeek/coverage.svg)](https://shepherd.dev/github/simplesamlphp/simplesamlphp-module-logpeek)
