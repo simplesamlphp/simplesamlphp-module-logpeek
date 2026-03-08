@@ -49,7 +49,7 @@ class ReverseRead
     /** @var int */
     private int $fileMtime;
 
-    /** @var array Array containing file lines */
+    /** @var string[] Array containing file lines */
     private array $content;
 
     /** @var string Leftover before first complete line */
@@ -112,7 +112,7 @@ class ReverseRead
      * @return string|false buffer with datablock.
      * Will return bool FALSE when there is no more data to get.
      */
-    private function readChunk()
+    private function readChunk(): string|false
     {
         $splits = $this->blockSize;
 
@@ -140,7 +140,7 @@ class ReverseRead
      * @return string|false One line of data from the file.
      * Bool FALSE when there is no more data to get.
      */
-    public function getPreviousLine()
+    public function getPreviousLine(): string|false
     {
         if (count($this->content) === 0 || $this->readPointer < 1) {
             do {
@@ -174,17 +174,13 @@ class ReverseRead
                     $buff = substr($buff, 1);
                     $this->remainder = '';
                 }
-            } while (($buff !== false) && ($eolPos === false));
+            } while ($eolPos === false);
 
             $this->content = explode("\n", $buff);
             $this->readPointer = count($this->content);
         }
 
-        if (count($this->content) > 0) {
-            return $this->content[--$this->readPointer];
-        } else {
-            return false;
-        }
+        return $this->content[--$this->readPointer];
     }
 
 
@@ -194,7 +190,7 @@ class ReverseRead
      * @param int $exit
      * @return string|false
      */
-    private function cutHead(string &$haystack, string $needle, int $exit)
+    private function cutHead(string &$haystack, string $needle, int $exit): string|false
     {
         $pos = 0;
         $cnt = 0;
@@ -204,7 +200,7 @@ class ReverseRead
             $pos++;
             $cnt++;
         }
-        /** @psalm-var int|false $pos */
+        /** @var int<0, max>|false $pos */
         return ($pos === false) ? false : substr($haystack, $pos, strlen($haystack));
     }
 
@@ -212,7 +208,7 @@ class ReverseRead
     /**
      * FIXME: This function has some error, do not use before auditing and testing
      * @param int $lines
-     * @return array
+     * @return string[]
      */
     public function getTail(int $lines = 10): array
     {
@@ -253,7 +249,7 @@ class ReverseRead
      * @param int $pos
      * @return string|false
      */
-    private function getLineAtPost(int $pos)
+    private function getLineAtPost(int $pos): string|false
     {
         if ($pos < 0 || $pos > $this->fileSize) {
             return false;
@@ -272,7 +268,7 @@ class ReverseRead
     /**
      * @return string|false
      */
-    public function getFirstLine()
+    public function getFirstLine(): string|false
     {
         return $this->getLineAtPost(0);
     }
@@ -281,7 +277,7 @@ class ReverseRead
     /**
      * @return string|false
      */
-    public function getLastLine()
+    public function getLastLine(): string|false
     {
         return $this->getLineAtPost($this->fileSize - 2);
     }

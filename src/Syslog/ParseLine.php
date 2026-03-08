@@ -28,7 +28,7 @@ class ParseLine
      * @param int|null $year
      * @return int|false
      */
-    public static function getUnixTime(string $logLine, int $year = null)
+    public static function getUnixTime(string $logLine, ?int $year = null): int|false
     {
         // I can read month and day and time from the file.
         // but I will assume year is current year retured by time().

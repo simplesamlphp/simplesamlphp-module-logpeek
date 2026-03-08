@@ -122,7 +122,7 @@ class Logpeek
      * @param \SimpleSAML\Module\logpeek\File\ReverseRead $objFile
      * @param string $tag
      * @param int $cut
-     * @return array
+     * @return string[]
      */
     private function logFilter(File\ReverseRead $objFile, string $tag, int $cut): array
     {
