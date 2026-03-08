@@ -214,7 +214,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           # Should be the lowest supported version
-          php-version: '8.1'
+          php-version: '8.3'
           extensions: ctype, date, dom, fileinfo, filter, hash, intl, mbstring, openssl, pcre,\
             posix, session, sodium, spl, xml
           tools: composer
